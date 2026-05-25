@@ -12,21 +12,21 @@
 ## Pages
 
 ### בית
-https://-58d0330b.zappy5.app
+https://example.com
 אני רוצה ליצור אתר שהוא חוסם פרסומות לאתר קוראים &quot;חוסם הפרסומות של שילה - פשוט לגלוש נקי&quot; אני רק רוצה בקשה אחת שלא יראו שאתה יצרת את זה בנוסף אני רוצה שיהיה כתו
 
 ## Legal & Policy
 
 ### Privacy Policy
-https://-58d0330b.zappy5.app/privacy
+https://example.com/privacy
 Information about how user data is collected, stored, and protected.
 
 ### Terms & Conditions
-https://-58d0330b.zappy5.app/terms
+https://example.com/terms
 Legal terms describing service usage, rights, and policies.
 
 ### Accessibility Statement
-https://-58d0330b.zappy5.app/accessibility
+https://example.com/accessibility
 Information about WCAG compliance and accessibility features.
 
 ---
@@ -36,8 +36,8 @@ Information about WCAG compliance and accessibility features.
 - (No contact details configured yet.)
 
 ### Contact form
-- URL: https://-58d0330b.zappy5.app
-- Endpoint: https://-58d0330b.zappy5.app/api/email/contact-form
+- URL: https://example.com
+- Endpoint: https://example.com/api/email/contact-form
 - Method: POST
 - Content-Type: application/json
 - Fields:
@@ -72,6 +72,6 @@ Ad Blocking / Browser Tools
 
 # Machine-readable feeds
 
-- Sitemap (XML): https://-58d0330b.zappy5.app/sitemap.xml
-- Robots: https://-58d0330b.zappy5.app/robots.txt
-- Flattened page text (for LLMs): https://-58d0330b.zappy5.app/llms-full.txt
+- Sitemap (XML): https://example.com/sitemap.xml
+- Robots: https://example.com/robots.txt
+- Flattened page text (for LLMs): https://example.com/llms-full.txt

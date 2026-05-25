@@ -738,15 +738,12 @@ activation_request.sh
 
 
 
-
-
-הפעל חסימת פרסומות — בחינם
-
+Sending...
 
 
 הפרטים שלך מאובטחים ולא יועברו לצד שלישי. אנחנו כאן רק כדי לעזור לך לגלוש נקי.
 
-
+Your message has been sent successfully. We will get back to you soon.
 
 
 

@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="index, follow">
+    <title>חוסם פרסומות בחינם — חוסם הפרסומות של שילה - פשוט לגלוש נקי!</title>
+    <meta name="description" content="אני רוצה ליצור אתר שהוא חוסם פרסומות לאתר קוראים &quot;חוסם הפרסומות של שילה - פשוט לגלוש נקי&quot; אני רק רוצה בקשה אחת שלא יראו שאתה יצרת את זה בנוסף אני רוצה שיהיה כתו">
+    <meta name="keywords" content="חוסם פרסומות בחינם, אפשרות לגלוש נקי, חוסם הפרסומות של שילה">
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Zappy Analytics -->
+<script>
+(function() {
+  'use strict';
+  
+  // Configuration
+  var config = {
+    websiteId: '58d0330b-cee2-4881-b194-ee28b2c1e8fd',
+    apiUrl: 'https://api.zappy5.com/api/analytics/track',
+    sessionDuration: 30 * 60 * 1000, // 30 minutes
+    visitorDuration: 30 * 24 * 60 * 60 * 1000, // 30 days
+    trackPageViews: true,
+    trackClicks: true,
+    trackFormSubmissions: true
+  };
+  
+  // Generate or retrieve persistent visitor ID (30 days)
+  function getVisitorId() {
+    var visitorKey = 'zappy_visitor_' + config.websiteId;
+    var visitor = null;
+    
+    try {
+      visitor = localStorage.getItem(visitorKey);
+      if (visitor) {
+        var visitorData = JSON.parse(visitor);
+        var now = Date.now();
+        
+        // Check if visitor ID is still valid (30 days)
+        if (now - visitorData.created < config.visitorDuration) {
+          // Update last seen timestamp
+          visitorData.lastSeen = now;
+          localStorage.setItem(visitorKey, JSON.stringify(visitorData));
+          return visitorData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: LocalStorage not available');
+    }
+    
+    // Generate new visitor ID
+    var newVisitorId = 'zv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      localStorage.setItem(visitorKey, JSON.stringify({
+        id: newVisitorId,
+        created: Date.now(),
+        lastSeen: Date.now()
+      }));
+    } catch (e) {
+      // Continue without local storage
+    }
+    
+    return newVisitorId;
+  }
+  
+  // Generate or retrieve session ID (30 minutes)
+  function getSessionId() {
+    var sessionKey = 'zappy_session_' + config.websiteId;
+    var session = null;
+    
+    try {
+      session = sessionStorage.getItem(sessionKey);
+      if (session) {
+        var sessionData = JSON.parse(session);
+        var now = Date.now();
+        
+        // Check if session is still valid
+        if (now - sessionData.timestamp < config.sessionDuration) {
+          // Update timestamp
+          sessionData.timestamp = now;
+          sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
+          return sessionData.id;
+        }
+      }
+    } catch (e) {
+      console.warn('Zappy Analytics: SessionStorage not available');
+    }
+    
+    // Generate new session ID
+    var newSessionId = 'zs_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    
+    try {
+      sessionStorage.setItem(sessionKey, JSON.stringify({
+        id: newSessionId,
+        timestamp: Date.now()
+      }));
+    } catch (e) {
+      // Continue without session storage
+    }
+    
+    return newSessionId;
+  }
+  
+  var visitorId = getVisitorId();
+  var sessionId = getSessionId();
+  
+  // Track an event
+  function trackEvent(eventType, data) {
+    data = data || {};
+    
+    var eventData = {
+      website_id: config.websiteId,
+      event_type: eventType,
+      page_path: window.location.pathname,
+      referrer: document.referrer || 'direct',
+      visitor_id: visitorId,
+      session_id: sessionId,
+      metadata: data
+    };
+    
+    // Use sendBeacon if available (better for page unload events)
+    if (navigator.sendBeacon) {
+      var blob = new Blob([JSON.stringify(eventData)], { type: 'application/json' });
+      navigator.sendBeacon(config.apiUrl, blob);
+    } else {
+      // Fallback to fetch
+      fetch(config.apiUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(eventData),
+        keepalive: true
+      }).catch(function(error) {
+        console.warn('Zappy Analytics: Failed to track event', error);
+      });
+    }
+  }
+  
+  // Track page view
+  if (config.trackPageViews) {
+    trackEvent('pageview', {
+      title: document.title,
+      url: window.location.href
+    });
+  }
+  
+  // Track clicks on important elements
+  if (config.trackClicks) {
+    document.addEventListener('click', function(e) {
+      var target = e.target;
+      
+      // Track button clicks (counted as actions)
+      if (target.tagName === 'BUTTON' || target.closest('button')) {
+        var button = target.tagName === 'BUTTON' ? target : target.closest('button');
+        trackEvent('click', {
+          element: 'button',
+          text: button.textContent.trim().substring(0, 100),
+          id: button.id || null,
+          class: button.className || null
+        });
+      }
+      
+      // Track link clicks (navigation - not counted as actions)
+      else if (target.tagName === 'A' || target.closest('a')) {
+        var link = target.tagName === 'A' ? target : target.closest('a');
+        trackEvent('navigation', {
+          element: 'link',
+          text: link.textContent.trim().substring(0, 100),
+          href: link.href,
+          external: link.hostname !== window.location.hostname
+        });
+      }
+    }, true);
+  }
+  
+  // Track form submissions
+  if (config.trackFormSubmissions) {
+    document.addEventListener('submit', function(e) {
+      var form = e.target;
+      
+      trackEvent('form_submit', {
+        form_id: form.id || null,
+        form_name: form.name || null,
+        form_action: form.action || null,
+        form_method: form.method || 'GET'
+      });
+    }, true);
+  }
+  
+  // Track time on page (send on page unload)
+  var pageLoadTime = Date.now();
+  
+  window.addEventListener('beforeunload', function() {
+    var timeOnPage = Math.floor((Date.now() - pageLoadTime) / 1000); // in seconds
+    
+    trackEvent('page_unload', {
+      time_on_page: timeOnPage,
+      page_path: window.location.pathname
+    });
+  });
+  
+  // Expose tracking function globally for custom events
+  window.zappyAnalytics = {
+    track: trackEvent,
+    getVisitorId: function() { return visitorId; },
+    getSessionId: function() { return sessionId; }
+  };
+  
+})();
+</script>
+<!-- End Zappy Analytics -->
+    <meta property="og:title" content="חוסם פרסומות בחינם — חוסם הפרסומות של שילה - פשוט לגלוש נקי!">
+    <meta property="og:description" content="אני רוצה ליצור אתר שהוא חוסם פרסומות לאתר קוראים &quot;חוסם הפרסומות של שילה - פשוט לגלוש נקי&quot; אני רק רוצה בקשה אחת שלא יראו שאתה יצרת את זה בנוסף אני רוצה שיהיה כתו">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="חוסם פרסומות בחינם — חוסם הפרסומות של שילה - פשוט לגלוש נקי!">
+    <meta name="twitter:description" content="אני רוצה ליצור אתר שהוא חוסם פרסומות לאתר קוראים &quot;חוסם הפרסומות של שילה - פשוט לגלוש נקי&quot; אני רק רוצה בקשה אחת שלא יראו שאתה יצרת את זה בנוסף אני רוצה שיהיה כתו">
+    <meta property="og:type" content="website">
+  <meta property="og:locale" content="he_IL">
+  
+  
+  
+  
+  
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    .skip-link { position: absolute; top: 0; left: 0; transform: translateY(-200%); padding: 12px 18px; background: var(--bg-dark, #1a1a1a); color: var(--text-light, #fff); font-weight: 600; border-radius: 0 0 8px 0; z-index: 10000; }
+    .skip-link:focus { transform: none; outline: 2px solid var(--ring, #fff); outline-offset: 2px; }
+    :focus-visible { outline: 2px solid var(--ring, currentColor); outline-offset: 3px; }
+  </style>
+
+
+  
+    <!-- Favicons -->
+    <link rel="icon" type="image/x-icon" href="/assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="/assets/favicon-48x48.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+    <!-- Cookie Consent -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.css">
+    <script src="https://cdn.jsdelivr.net/npm/vanilla-cookieconsent@3/dist/cookieconsent.umd.js"></script>
+    <!-- Mickidum Accessibility Toolbar -->
+    <script src="https://cdn.jsdelivr.net/gh/mickidum/acc_toolbar/acctoolbar/acctoolbar.min.js"></script>
+    <link rel="stylesheet" href="/styles.css">
+
+    <style id="zappy-dropdown-submenu-styles">
+      /* ========== DESKTOP DROPDOWN SUBMENU STYLES ========== */
+      /* Base styles for dropdown submenus - parent must be positioned */
+      .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { position: relative; }
+      /* Submenu base - hidden by default */
+      .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { display: block !important; position: absolute !important; top: 100%; left: 0; min-width: 220px; background: white; border-radius: 8px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); padding: 8px 0; opacity: 0; visibility: hidden; transform: translateY(10px); transition: all 0.3s ease; z-index: 1000; list-style: none; pointer-events: none; }
+      /* CRITICAL: Desktop hover styles to show dropdown */
+      .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Submenu item styling */
+      .sub-menu li { list-style: none; margin: 0; padding: 0; }
+      .sub-menu a { display: block !important; padding: 10px 16px !important; color: var(--text-dark, #333) !important; font-weight: 500; text-decoration: none; white-space: nowrap; transition: background-color 0.2s; }
+      .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+      [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 10px !important; padding-right: 28px !important; }
+      .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+      .sub-menu a:hover { background-color: #f5f5f5; }
+      /* RTL (Hebrew/Arabic) dropdown positioning */
+      [dir="rtl"] .nav-menu .sub-menu, [dir="rtl"] nav .sub-menu, [dir="rtl"] .navbar .sub-menu, html[lang="he"] .nav-menu .sub-menu, html[lang="he"] nav .sub-menu, html[lang="he"] .navbar .sub-menu, html[lang="ar"] .nav-menu .sub-menu, html[lang="ar"] nav .sub-menu, html[lang="ar"] .navbar .sub-menu { left: auto !important; right: 0 !important; }
+      /* Hide empty dropdown menus (exclude catalog sub-menus that use <a> children instead of <li>) */
+      .sub-menu:empty, .sub-menu:not(:has(li:not(.zappy-hidden-menu-item))):not(:has(> a)), .sub-menu:not(:has(li)):not(:has(> a)) { display: none !important; opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
+      /* Desktop: show submenu on Menu Group hover */
+      li:has(.menu-group-title):hover > .sub-menu { opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important; pointer-events: auto !important; }
+      /* Menu Group title styling */
+      .nav-menu > li > .menu-group-title, #navMenu > li > .menu-group-title { display: inline-block; padding: 0.5rem 1rem; cursor: default; user-select: none; }
+      
+      /* ========== MOBILE SUBMENU STYLES ========== */
+      @media (max-width: 768px) {
+        .nav-menu .sub-menu, nav .sub-menu, .navbar .sub-menu, #navMenu .sub-menu { position: static !important; transform: none !important; box-shadow: none !important; background: transparent !important; max-height: 0; overflow: hidden; opacity: 0; visibility: hidden; transition: max-height 0.3s ease, opacity 0.3s ease; padding: 0 !important; border-radius: 0 !important; }
+        .navbar .sub-menu.mobile-expanded, .nav-menu .sub-menu.mobile-expanded, #navMenu .sub-menu.mobile-expanded { max-height: none !important; overflow-y: visible !important; opacity: 1 !important; visibility: visible !important; padding: 8px 0 8px 16px !important; }
+        [dir="rtl"] .sub-menu.mobile-expanded, html[lang="he"] .sub-menu.mobile-expanded { padding: 8px 16px 8px 0 !important; }
+        /* Disable hover behavior on mobile */
+        .nav-menu li:hover > .sub-menu, nav li:hover > .sub-menu, .navbar li:hover > .sub-menu, #navMenu li:hover > .sub-menu { opacity: 0; visibility: hidden; pointer-events: none; }
+        .nav-menu li > .sub-menu.mobile-expanded, nav li > .sub-menu.mobile-expanded, .navbar li > .sub-menu.mobile-expanded, #navMenu li > .sub-menu.mobile-expanded { opacity: 1 !important; visibility: visible !important; pointer-events: auto !important; }
+        .nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu) { display: flex !important; flex-wrap: wrap !important; align-items: center !important; position: relative !important; min-height: 44px !important; }
+        .nav-menu li:has(.sub-menu) > a, nav li:has(.sub-menu) > a, .navbar li:has(.sub-menu) > a, #navMenu li:has(.sub-menu) > a { flex: 1 !important; min-width: 0 !important; }
+        .nav-menu li:has(.sub-menu) > .menu-group-title, nav li:has(.sub-menu) > .menu-group-title, .navbar li:has(.sub-menu) > .menu-group-title, #navMenu li:has(.sub-menu) > .menu-group-title { flex: 1 !important; min-width: 0 !important; padding: 0 !important; line-height: inherit !important; }
+        .nav-menu li:has(.sub-menu) > .sub-menu, nav li:has(.sub-menu) > .sub-menu, .navbar li:has(.sub-menu) > .sub-menu, #navMenu li:has(.sub-menu) > .sub-menu { flex-basis: 100% !important; width: 100% !important; }
+        .nav-menu li:has(.sub-menu) > a [class*="chevron"], .nav-menu li:has(.sub-menu) > a [class*="arrow"], .nav-menu li:has(.sub-menu) > a .fa-chevron-down, .nav-menu li:has(.sub-menu) > a .fa-angle-down, nav li:has(.sub-menu) > a [class*="chevron"], nav li:has(.sub-menu) > a [class*="arrow"], #navMenu li:has(.sub-menu) > a [class*="chevron"], #navMenu li:has(.sub-menu) > a [class*="arrow"] { display: none !important; visibility: hidden !important; }
+        .mobile-submenu-toggle { display: flex !important; align-items: center !important; justify-content: center !important; width: 44px !important; height: auto !important; background: transparent !important; border: none !important; cursor: pointer !important; color: var(--text-light) !important; position: static !important; flex-shrink: 0 !important; align-self: stretch !important; z-index: 2 !important; padding: 0 !important; margin: 0 !important; }
+        .mobile-submenu-toggle::after { content: '' !important; width: 0 !important; height: 0 !important; border-left: 6px solid transparent !important; border-right: 6px solid transparent !important; border-top: 7px solid currentColor !important; transition: transform 0.3s ease !important; }
+        .mobile-submenu-toggle.expanded::after { transform: rotate(180deg) !important; }
+        .sub-menu a { padding: 10px 0 !important; display: block !important; color: var(--text-light) !important; white-space: normal !important; }
+        .sub-menu .zappy-nav-child > a { padding-left: 28px !important; font-size: 0.9em !important; opacity: 0.85 !important; }
+        [dir="rtl"] .sub-menu .zappy-nav-child > a, html[lang="he"] .sub-menu .zappy-nav-child > a, html[lang="ar"] .sub-menu .zappy-nav-child > a { padding-left: 0 !important; padding-right: 28px !important; }
+        .sub-menu .zappy-nav-parent > a { font-weight: 600 !important; }
+        .nav-menu.active, #navMenu.active { max-width: 100vw !important; overflow-x: hidden !important; box-sizing: border-box !important; }
+        .navbar .sub-menu li a, nav.navbar .sub-menu li a, .zappy-products-dropdown .sub-menu a { color: var(--text-light) !important; }
+      }
+      @media (min-width: 769px) { .mobile-submenu-toggle { display: none !important; } }
+    </style>
+
+    <style id="zappy-widget-visibility">
+      html[dir="rtl"] .whatsapp-float { right: 20px !important; left: auto !important; }
+      html[dir="ltr"] .whatsapp-float, html:not([dir]) .whatsapp-float { left: 20px !important; right: auto !important; }
+      html[dir="rtl"] #mic-access-tool-general-button, html[dir="rtl"] .mic-access-tool-general-button,
+      html[dir="rtl"] #mic-init-access-tool .mic-access-tool-general-button,
+      html[dir="rtl"] #mic-init-access-tool #mic-access-tool-general-button,
+      html[dir="rtl"] ._access-icon { left: 20px !important; right: auto !important; }
+      html[dir="ltr"] #mic-access-tool-general-button, html[dir="ltr"] .mic-access-tool-general-button,
+      html[dir="ltr"] #mic-init-access-tool .mic-access-tool-general-button,
+      html[dir="ltr"] #mic-init-access-tool #mic-access-tool-general-button,
+      html[dir="ltr"] ._access-icon,
+      html:not([dir]) #mic-access-tool-general-button, html:not([dir]) .mic-access-tool-general-button,
+      html:not([dir]) #mic-init-access-tool .mic-access-tool-general-button,
+      html:not([dir]) #mic-init-access-tool #mic-access-tool-general-button,
+      html:not([dir]) ._access-icon { right: 20px !important; left: auto !important; }
+      @media (max-width: 768px) { .whatsapp-float { display: flex !important; } }
+      @media (min-width: 769px) { .whatsapp-float { display: flex !important; } }
+      @media (max-width: 768px) {
+        #mic-access-tool-general-button, .mic-access-tool-general-button,
+        #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+        ._access-icon { display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+        #mic-access-tool-box.opened-mic-access-tool, .mic-access-tool-box.opened-mic-access-tool,
+        #mic-init-access-tool #mic-access-tool-box.opened-mic-access-tool {
+          visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;
+        }
+      }
+      @media (min-width: 769px) {
+        #mic-access-tool-general-button, .mic-access-tool-general-button,
+        #mic-init-access-tool .mic-access-tool-general-button, #mic-init-access-tool #mic-access-tool-general-button,
+        ._access-icon { display: flex !important; visibility: visible !important; opacity: 1 !important; pointer-events: auto !important; }
+        #mic-access-tool-box.opened-mic-access-tool, .mic-access-tool-box.opened-mic-access-tool,
+        #mic-init-access-tool #mic-access-tool-box.opened-mic-access-tool {
+          visibility: visible !important; opacity: 1 !important; pointer-events: auto !important;
+        }
+      }
+    </style>
+</head>
+<body>
+<a class="skip-link" href="#main">דלג לתוכן הראשי</a>
+  <nav class="navbar" dir="rtl">
+  <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+    <svg class="hamburger-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+      <path d="M3 12h18M3 6h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+    <svg class="close-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" style="display: none;">
+      <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+  </button>
+
+  <button class="phone-header-btn" data-phone="[business_phone]" aria-label="Call">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+    </svg>
+  </button>
+
+  <div class="nav-container">
+    <div class="nav-right-group"><div class="nav-brand">
+      <a href="/" class="logo-link"><img class="logo" src="/assets/site-----image-1.webp" alt="חוסם הפרסומות של שילה - פשוט לגלוש נקי!"></a>
+    </div><ul class="nav-menu" id="navMenu"><li><a href="#features">תכונות</a></li><li><a href="#benefits">יתרונות</a></li><li><a href="#testimonials">המלצות</a></li><li><a href="#stats">נתונים</a></li><li><a href="#process">תהליך</a></li></ul></div>
+
+    
+
+    <div class="nav-cta-container">
+      <a href="#cta" class="nav-cta-btn">צור קשר</a>
+    </div>
+  </div>
+</nav>
+<script>
+
+// Navbar Mobile Menu Toggle and Contrast Fix
+(function() {
+  // Use 'load' event instead of 'DOMContentLoaded' to ensure we run AFTER all other scripts
+  window.addEventListener('load', function() {
+    
+    // FIX MOBILE BUTTON CONTRAST
+    // Detect navbar background color and apply contrasting color to mobile buttons
+    const navbar = document.querySelector('.navbar, nav, header');
+    if (!navbar) {
+      console.log('[Navbar] Navbar element not found');
+      return;
+    }
+    
+    // DECLARE VARIABLES EARLY to avoid Temporal Dead Zone errors
+    // These are used in multiple places below
+    let mobileToggle = document.getElementById('mobileToggle') ||
+                       document.querySelector('.mobile-toggle') ||
+                       document.querySelector('.hamburger') ||
+                       document.querySelector('.hamburger-menu') ||
+                       document.querySelector('.menu-toggle') ||
+                       document.querySelector('.burger-menu') ||
+                       document.querySelector('[aria-label="Menu"]') ||
+                       document.querySelector('[aria-label="תפריט"]');
+    
+    const phoneBtn = document.querySelector('.phone-header-btn');
+    
+    const computedStyle = window.getComputedStyle(navbar);
+    let bgColor = computedStyle.backgroundColor;
+    
+    console.log('[Navbar] Initial navbar background:', bgColor);
+    
+    // Check if background is transparent or rgba with 0 alpha
+    const isTransparent = bgColor === 'transparent' || 
+                         bgColor === 'rgba(0, 0, 0, 0)' ||
+                         (bgColor.startsWith('rgba') && bgColor.includes(', 0)'));
+    
+    if (isTransparent) {
+      // Check for background-image or gradient
+      const bgImage = computedStyle.backgroundImage;
+      if (bgImage && bgImage !== 'none') {
+        console.log('[Navbar] Navbar has background image/gradient, using dark text');
+        bgColor = 'rgb(240, 240, 240)'; // Assume light background
+      } else {
+        // Transparent navbar - check body background
+        const bodyBg = window.getComputedStyle(document.body).backgroundColor;
+        console.log('[Navbar] Navbar transparent, using body background:', bodyBg);
+        bgColor = bodyBg;
+      }
+    }
+    
+    // Calculate luminance to determine if background is light or dark
+    const rgb = bgColor.match(/\d+/g);
+    if (rgb && rgb.length >= 3) {
+      const r = parseInt(rgb[0]);
+      const g = parseInt(rgb[1]);
+      const b = parseInt(rgb[2]);
+      const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      
+      // Mobile button colors are set by Claude's AI-generated CSS (same as .nav-menu a)
+      // No dynamic color overrides needed - colors come from the generated navbar CSS
+      console.log('[Navbar] Mobile button colors preserved from Claude CSS (luminance:', luminance.toFixed(2) + ')');
+      
+      // FIX ICON SIZES - Ensure SVGs are properly sized and visible
+      // INJECT CRITICAL CSS TO OVERRIDE ANY CONFLICTING RULES
+      const criticalCSS = document.createElement('style');
+      criticalCSS.id = 'zappy-mobile-nav-fix';
+      const htmlLang = document.documentElement.lang || 'en';
+      const htmlDir = document.documentElement.dir || 'ltr';
+      // Check both dir attribute AND lang for RTL detection
+      // dir="rtl" is the most reliable indicator
+      const isRTL = htmlDir === 'rtl' || htmlLang === 'he' || htmlLang === 'ar';
+      
+      criticalCSS.textContent = `
+        /* Hide mobile buttons on desktop, show only on mobile */
+        @media (min-width: 769px) {
+          .mobile-toggle,
+          .phone-header-btn {
+            display: none !important;
+          }
+        }
+        
+        /* Show and position mobile buttons correctly on mobile */
+        @media (max-width: 768px) {
+          .navbar,
+          nav.navbar {
+            min-height: 70px !important;
+          }
+
+          .mobile-toggle,
+          .phone-header-btn {
+            position: absolute !important;
+            top: 0 !important;
+            bottom: 0 !important;
+            margin-top: auto !important;
+            margin-bottom: auto !important;
+            transform: none !important;
+            z-index: 1001 !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            width: 36px !important;
+            height: 36px !important;
+            border-radius: 50% !important;
+            border: none !important;
+            cursor: pointer !important;
+            padding: 6px !important;
+            background: none !important;
+            color: var(--nav-text, var(--text-light)) !important;
+            touch-action: manipulation !important;
+            -webkit-tap-highlight-color: transparent !important;
+          }
+
+          html[data-zappy-site-type="ecommerce"] .phone-header-btn,
+          body[data-zappy-site-type="ecommerce"] .phone-header-btn,
+          html[data-zappy-site-type="ecommerce"] header .phone-header-btn,
+          html[data-zappy-site-type="ecommerce"] nav .phone-header-btn {
+            display: none !important;
+            visibility: hidden !important;
+            width: 0 !important;
+            height: 0 !important;
+            min-width: 0 !important;
+            overflow: hidden !important;
+          }
+          
+          /* LTR positioning (default): hamburger LEFT, phone RIGHT */
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .mobile-toggle,
+          html[dir="ltr"] .mobile-toggle {
+            left: 12px !important;
+            right: auto !important;
+          }
+          html:not([dir="rtl"]):not([lang="he"]):not([lang="ar"]) .phone-header-btn,
+          html[dir="ltr"] .phone-header-btn {
+            right: 12px !important;
+            left: auto !important;
+          }
+          
+          /* RTL positioning: hamburger RIGHT, phone LEFT */
+          html[dir="rtl"] .mobile-toggle,
+          html[lang="he"] .mobile-toggle,
+          html[lang="ar"] .mobile-toggle {
+            right: 12px !important;
+            left: auto !important;
+          }
+          html[dir="rtl"] .phone-header-btn,
+          html[lang="he"] .phone-header-btn,
+          html[lang="ar"] .phone-header-btn {
+            left: 12px !important;
+            right: auto !important;
+          }
+          
+          /* CRITICAL: Ensure nav-container has min-height on mobile */
+          /* All children are positioned absolutely/fixed on mobile, so height:auto collapses to 0 */
+          .nav-container {
+            min-height: 70px !important;
+            position: relative !important;
+          }
+          
+          /* Ensure SVG icons are properly sized and inherit color */
+          .mobile-toggle svg,
+          .phone-header-btn svg {
+            width: 24px !important;
+            height: 24px !important;
+            /* Don't force display - let JavaScript control hamburger/close toggle */
+          }
+          
+          /* Reset nav-cta-container on mobile - remove desktop box-shadow/padding */
+          /* that creates a visible ghost box when CTA button is hidden */
+          .nav-cta-container {
+            box-shadow: none !important;
+            padding: 0 !important;
+          }
+          
+          /* Hide nav-cta-container entirely on mobile when there's no lang-switcher */
+          /* (only the CTA button is inside, and it's hidden on mobile) */
+          .nav-cta-container:not(:has(.lang-switcher)) {
+            display: none !important;
+          }
+          
+          /* CRITICAL: Prevent hero image fade gradient from bleeding over headline text */
+          /* The .image-fade-gradient has bottom: -30px (extends below parent) */
+          /* On mobile stacked layout, this overlaps the h1 text below the image */
+          .hero-image-column {
+            overflow: hidden !important;
+          }
+          .image-fade-gradient {
+            bottom: 0 !important;
+          }
+          
+          /* Hide desktop language switcher on mobile - hamburger menu handles it */
+          /* High specificity to override stored CSS */
+          .lang-switcher,
+          .nav-cta-container .lang-switcher,
+          .nav-container .lang-switcher,
+          .navbar .lang-switcher,
+          .navbar .nav-cta-container .lang-switcher {
+            display: none !important;
+          }
+        }
+      `;
+      
+      // Remove existing fix if present and inject new one
+      const existing = document.getElementById('zappy-mobile-nav-fix');
+      if (existing) existing.remove();
+      document.head.appendChild(criticalCSS);
+      
+      console.log('[Navbar] Critical CSS injected for mobile nav positioning');
+      
+      // ONLY apply inline positioning styles on mobile viewport
+      // On desktop, the CSS handles hiding these buttons with display: none
+      // Inline styles were breaking desktop layout by overriding CSS
+      const isMobileViewport = window.innerWidth <= 768;
+      
+      if (mobileToggle) {
+        // Icon sizing applies to all viewports for consistency
+        const hamburgerIcon = mobileToggle.querySelector('.hamburger-icon');
+        const closeIcon = mobileToggle.querySelector('.close-icon');
+        
+        if (hamburgerIcon) {
+          hamburgerIcon.style.setProperty('width', '24px', 'important');
+          hamburgerIcon.style.setProperty('height', '24px', 'important');
+          hamburgerIcon.style.setProperty('display', 'block', 'important'); // Show hamburger by default
+        }
+        if (closeIcon) {
+          closeIcon.style.setProperty('width', '24px', 'important');
+          closeIcon.style.setProperty('height', '24px', 'important');
+          closeIcon.style.setProperty('display', 'none', 'important'); // Hide close icon by default
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          mobileToggle.style.setProperty('position', 'absolute', 'important');
+          mobileToggle.style.setProperty('top', '0', 'important');
+          mobileToggle.style.setProperty('bottom', '0', 'important');
+          mobileToggle.style.setProperty('margin-top', 'auto', 'important');
+          mobileToggle.style.setProperty('margin-bottom', 'auto', 'important');
+          mobileToggle.style.setProperty('transform', 'none', 'important');
+          mobileToggle.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          
+          console.log('[Navbar] Mobile toggle positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          mobileToggle.style.removeProperty('position');
+          mobileToggle.style.removeProperty('top');
+          mobileToggle.style.removeProperty('transform');
+          mobileToggle.style.removeProperty('z-index');
+          mobileToggle.style.removeProperty('left');
+          mobileToggle.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared mobile toggle inline positioning');
+        }
+      }
+      
+      if (phoneBtn) {
+        // Icon sizing applies to all viewports
+        const phoneIcon = phoneBtn.querySelector('svg');
+        if (phoneIcon) {
+          phoneIcon.style.width = '24px';
+          phoneIcon.style.height = '24px';
+          phoneIcon.setAttribute('width', '24');
+          phoneIcon.setAttribute('height', '24');
+        }
+        
+        // ONLY set positioning inline styles on mobile
+        if (isMobileViewport) {
+          phoneBtn.style.setProperty('position', 'absolute', 'important');
+          phoneBtn.style.setProperty('top', '0', 'important');
+          phoneBtn.style.setProperty('bottom', '0', 'important');
+          phoneBtn.style.setProperty('margin-top', 'auto', 'important');
+          phoneBtn.style.setProperty('margin-bottom', 'auto', 'important');
+          phoneBtn.style.setProperty('transform', 'none', 'important');
+          phoneBtn.style.setProperty('z-index', '1001', 'important');
+          
+          // Clear any inline left/right so CSS can take over based on html[dir]
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          
+          console.log('[Navbar] Phone button positioning applied (mobile viewport)');
+        } else {
+          // On desktop, clear any positioning styles to let CSS handle it
+          phoneBtn.style.removeProperty('position');
+          phoneBtn.style.removeProperty('top');
+          phoneBtn.style.removeProperty('transform');
+          phoneBtn.style.removeProperty('z-index');
+          phoneBtn.style.removeProperty('left');
+          phoneBtn.style.removeProperty('right');
+          console.log('[Navbar] Desktop viewport - cleared phone button inline positioning');
+        }
+      }
+    } else {
+      console.log('[Navbar] Could not parse background color:', bgColor);
+    }
+    
+    // MOBILE MENU TOGGLE
+    // Re-query in case DOM changed (mobileToggle already declared at top of function)
+    mobileToggle = document.getElementById('mobileToggle') ||
+                   document.querySelector('.mobile-toggle') ||
+                   document.querySelector('.hamburger') ||
+                   document.querySelector('.hamburger-menu') ||
+                   document.querySelector('.menu-toggle') ||
+                   document.querySelector('.burger-menu') ||
+                   document.querySelector('[aria-label="Menu"]') ||
+                   document.querySelector('[aria-label="תפריט"]');
+    
+    // EXPANDED SEARCH: Find nav menu by ID or class
+    const navMenu = document.getElementById('navMenu') ||
+                  document.querySelector('.nav-menu') ||
+                  document.querySelector('.nav-links') ||
+                  document.querySelector('nav ul:not(.submenu)');
+    
+    if (!mobileToggle || !navMenu) {
+      console.log('[Navbar] Mobile toggle or menu not found:', { toggle: !!mobileToggle, menu: !!navMenu });
+      return;
+    }
+    
+    // Ensure navMenu has ID for CSS targeting
+    if (!navMenu.id) {
+      navMenu.id = 'navMenu';
+    }
+    
+    console.log('[Navbar] Initializing mobile menu...');
+    
+    // Remove any existing event listeners by cloning the button
+    const newToggle = mobileToggle.cloneNode(true);
+    mobileToggle.parentNode.replaceChild(newToggle, mobileToggle);
+    
+    // Toggle menu handler (shared by click and touchend)
+    function handleToggle(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+      const closeIcon = newToggle.querySelector('.close-icon');
+      const isActive = navMenu.classList.contains('active');
+      
+      if (isActive) {
+        // Close menu
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed');
+      } else {
+        // Open menu
+        navMenu.classList.add('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'none', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'block', 'important');
+        document.body.style.overflow = 'hidden';
+        console.log('[Navbar] Menu opened');
+      }
+    }
+    
+    // Use click for desktop/emulation and touchend as iOS Safari fallback.
+    // Prevent double-fire with a timestamp guard.
+    var lastToggleTime = 0;
+    function guardedToggle(e) {
+      var now = Date.now();
+      if (now - lastToggleTime < 300) return;
+      lastToggleTime = now;
+      handleToggle(e);
+    }
+    
+    newToggle.addEventListener('click', guardedToggle);
+    newToggle.addEventListener('touchend', guardedToggle);
+    
+    // Close menu when clicking nav links (but NOT dropdown toggles)
+    const navLinks = navMenu.querySelectorAll('a');
+    navLinks.forEach(function(link) {
+      link.addEventListener('click', function() {
+        // Don't close if it's a dropdown child (unless it's a real navigation link)
+        if (this.getAttribute('href') === '#') return;
+        
+        const hamburgerIcon = newToggle.querySelector('.hamburger-icon');
+        const closeIcon = newToggle.querySelector('.close-icon');
+        
+        navMenu.classList.remove('active');
+        if (hamburgerIcon) hamburgerIcon.style.setProperty('display', 'block', 'important');
+        if (closeIcon) closeIcon.style.setProperty('display', 'none', 'important');
+        document.body.style.overflow = '';
+        console.log('[Navbar] Menu closed (link clicked)');
+      });
+    });
+    
+    // DROPDOWN MENU TOGGLE (for mobile and touch devices)
+    var dropdownToggles = navMenu.querySelectorAll('.dropdown-toggle');
+    dropdownToggles.forEach(function(toggle) {
+      toggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var parent = this.closest('.nav-dropdown');
+        if (!parent) return;
+        
+        // Close other open dropdowns at the same level
+        var siblings = parent.parentNode.querySelectorAll('.nav-dropdown.open');
+        siblings.forEach(function(sib) {
+          if (sib !== parent) sib.classList.remove('open');
+        });
+        
+        parent.classList.toggle('open');
+        console.log('[Navbar] Dropdown toggled:', parent.classList.contains('open') ? 'open' : 'closed');
+      });
+    });
+    
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.nav-dropdown')) {
+        var openDropdowns = document.querySelectorAll('.nav-dropdown.open');
+        openDropdowns.forEach(function(dd) { dd.classList.remove('open'); });
+      }
+    });
+    
+    console.log('[Navbar] Dropdown handlers initialized for ' + dropdownToggles.length + ' dropdowns');
+    
+    // Phone button functionality (phoneBtn already declared at top of function)
+    if (phoneBtn) {
+      phoneBtn.addEventListener('click', function() {
+        // Get phone number from placeholder in page or use default
+        const phoneLinks = document.querySelectorAll('a[href^="tel:"]');
+        const phoneNumber = phoneLinks.length > 0 
+          ? phoneLinks[0].getAttribute('href').replace('tel:', '')
+          : '[business_phone]';
+        
+        window.location.href = 'tel:' + phoneNumber;
+        console.log('[Navbar] Phone button clicked');
+      });
+    }
+    
+    console.log('[Navbar] Mobile menu initialized successfully');
+    
+    // WhatsApp button visibility is now controlled via CSS (siteSettings).
+    // No JS-based desktop hiding — the button is visible on both mobile and desktop by default.
+  });
+})();
+
+</script>
+  
+  <main id="main">
+    <section data-band-index="0" id="hero" class="index-hero-section" data-layout-spec="בית-hero" dir="rtl" data-hero-type="fullscreen-scrim">
+  <!-- Background Image Layer -->
+  <div class="index-hero-bg-wrapper" aria-hidden="true">
+    <img loading="eager" fetchpriority="high" data-hero-bg="true" data-placeholder="index-hero-image-1" data-context="Cinematic dark browser interface screenshot showing a clean, ad-free webpage on a dark graphite background. Split view: left side shows a cluttered webpage with blurry ad fragments dissolving, right side shows a pristine clean browsing experience with glowing cyan highlights. Deep dark navy and near-black tones, dramatic lighting, premium tech aesthetic, ultra-wide desktop monitor in a dark studio environment, subtle violet bloom in background corners" width="1200" height="600" src="/assets/site-index-hero-image-1.webp" alt="ממשק גלישה נקי וחופשי מפרסומות" class="index-hero-bg-img">
+  </div>
+
+  <!-- Decorative: Nebula glow -->
+  <div class="index-hero-nebula" aria-hidden="true"></div>
+
+  <!-- Decorative: Star field -->
+  <svg class="index-hero-stars" aria-hidden="true" data-no-icon-edit="true" viewBox="0 0 1200 700" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid slice">
+    <circle cx="80" cy="60" r="1.2" fill="white" opacity="0.5"></circle>
+    <circle cx="200" cy="120" r="0.8" fill="white" opacity="0.35"></circle>
+    <circle cx="340" cy="40" r="1.5" fill="white" opacity="0.4"></circle>
+    <circle cx="500" cy="90" r="0.9" fill="white" opacity="0.3"></circle>
+    <circle cx="650" cy="30" r="1.1" fill="white" opacity="0.45"></circle>
+    <circle cx="780" cy="110" r="0.7" fill="white" opacity="0.35"></circle>
+    <circle cx="920" cy="55" r="1.3" fill="white" opacity="0.5"></circle>
+    <circle cx="1050" cy="80" r="0.8" fill="white" opacity="0.3"></circle>
+    <circle cx="1150" cy="140" r="1.0" fill="white" opacity="0.4"></circle>
+    <circle cx="130" cy="200" r="0.9" fill="white" opacity="0.25"></circle>
+    <circle cx="420" cy="180" r="1.2" fill="white" opacity="0.35"></circle>
+    <circle cx="700" cy="210" r="0.7" fill="white" opacity="0.3"></circle>
+    <circle cx="990" cy="170" r="1.1" fill="white" opacity="0.4"></circle>
+    <circle cx="60" cy="350" r="0.8" fill="white" opacity="0.2"></circle>
+    <circle cx="310" cy="320" r="1.0" fill="white" opacity="0.3"></circle>
+    <circle cx="870" cy="300" r="0.9" fill="white" opacity="0.25"></circle>
+    <circle cx="1100" cy="380" r="1.2" fill="white" opacity="0.35"></circle>
+  </svg>
+
+  <!-- Decorative: Shield ring pulse -->
+  <svg class="index-hero-shield-rings" aria-hidden="true" data-no-icon-edit="true" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="200" cy="200" r="80" fill="none" stroke="rgba(0,212,255,0.18)" stroke-width="1.5"></circle>
+    <circle cx="200" cy="200" r="120" fill="none" stroke="rgba(0,212,255,0.12)" stroke-width="1"></circle>
+    <circle cx="200" cy="200" r="160" fill="none" stroke="rgba(0,212,255,0.07)" stroke-width="1"></circle>
+    <circle cx="200" cy="200" r="195" fill="none" stroke="rgba(0,212,255,0.04)" stroke-width="1"></circle>
+  </svg>
+
+  <!-- Atmospheric Scrim -->
+  <div class="index-hero-scrim" aria-hidden="true"></div>
+
+  <!-- Content Container -->
+  <div class="index-hero-container">
+    <div class="index-hero-content">
+
+      <!-- Micro badge -->
+      <div class="index-hero-badge">
+        <span class="index-hero-badge-dot" aria-hidden="true"></span>
+        <span>חינמי לחלוטין · ללא פרסומות · ללא מעקב</span>
+      </div>
+
+      <!-- H1 -->
+      <h1 class="index-hero-h1">גלישה נקייה.<br><span class="index-hero-h1-accent">ללא פרסומות. בחינם.</span></h1>
+
+      <!-- Supporting H3 -->
+      <h3 class="index-hero-subtitle">חוסם הפרסומות של שילה מסיר פרסומות, מאיץ טעינה, ומשמר את הריכוז שלך — הגדרה פשוטה, תוצאה מיידית.</h3>
+
+      <!-- CTA Buttons -->
+      <div class="index-hero-ctas">
+        <a href="#register" class="index-hero-btn-primary">
+          <i class="fas fa-shield-alt" aria-hidden="true"></i>
+          התחל עכשיו — בחינם
+        </a>
+        <a href="#how-it-works" class="index-hero-btn-secondary">
+          <i class="fas fa-play-circle" aria-hidden="true"></i>
+          איך זה עובד?
+        </a>
+      </div>
+
+      <!-- Trust line -->
+      <p class="index-hero-trust">
+        <i class="fas fa-check-circle" aria-hidden="true"></i>
+        השירות חינמי לגמרי — אין תשלום, אין הפתעות. פשוט לגלוש נקי.
+      </p>
+
+    </div>
+  </div>
+
+  <!-- Bottom Divider -->
+  <div class="index-hero-divider-wrapper" aria-hidden="true">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="dividerGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="rgba(0,212,255,0)"></stop>
+          <stop offset="30%" stop-color="rgba(0,212,255,0.55)"></stop>
+          <stop offset="70%" stop-color="rgba(124,58,237,0.45)"></stop>
+          <stop offset="100%" stop-color="rgba(0,212,255,0)"></stop>
+        </linearGradient>
+      </defs>
+      <!-- Fill bottom with next section color -->
+      <path d="M0,90 L0,48 Q150,28 300,42 T600,32 Q800,22 1000,40 T1200,36 L1200,90 Z" fill="#060C18"></path>
+      <!-- Glowing cyan line along the wave edge -->
+      <path d="M0,48 Q150,28 300,42 T600,32 Q800,22 1000,40 T1200,36" fill="#060C18" stroke="url(#dividerGlow)" stroke-width="1.5"></path>
+    </svg>
+  </div>
+
+</section>
+
+<section data-band-index="1" id="features" class="index-features-section" data-layout-spec="בית-features" dir="rtl">
+  <!-- Decorative background elements -->
+  <div class="index-features-section__noise" aria-hidden="true"></div>
+  <div class="index-features-section__glow index-features-section__glow--cyan" aria-hidden="true"></div>
+  <div class="index-features-section__glow index-features-section__glow--violet" aria-hidden="true"></div>
+
+  <div class="index-features-section__container">
+
+    <!-- Section Intro -->
+    <div class="index-features-section__intro">
+      <span class="index-features-section__label">היכולות שלנו</span>
+      <h2 class="index-features-section__heading">גלישה נקייה. <span class="index-features-section__heading-accent">בלי פשרות.</span></h2>
+      <p class="index-features-section__subheading">חוסם הפרסומות של שילה מביא לכם חוויית גלישה נקייה ומהירה — ללא פרסומות מטרידות, ללא הסחות דעת, וללא צורך בידע טכני. פשוט לגלוש נקי.</p>
+    </div>
+
+    <!-- Features Grid -->
+    <div class="index-features-section__grid">
+
+      <!-- Card 1 -->
+      <article class="index-features-section__card">
+        <div class="index-features-section__card-icon-wrap">
+          <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M14 3L4 8V15C4 20.5 8.4 25.7 14 27C19.6 25.7 24 20.5 24 15V8L14 3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path>
+            <path d="M9 14L12.5 17.5L19 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <div class="index-features-section__card-content">
+          <h3 class="index-features-section__card-title">חסימת פרסומות מלאה</h3>
+          <p class="index-features-section__card-text">חוסם הפרסומות של שילה מסיר אוטומטית באנרים, פופ-אפים ופרסומות וידאו מכל האתרים שאתם מבקרים בהם — בזמן אמת, ללא מאמץ.</p>
+        </div>
+      </article>
+
+      <!-- Card 2 -->
+      <article class="index-features-section__card">
+        <div class="index-features-section__card-icon-wrap">
+          <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="3" y="5" width="22" height="16" rx="2" stroke="currentColor" stroke-width="1.5"></rect>
+            <path d="M9 23H19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            <path d="M14 21V23" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            <path d="M7 9H13M7 13H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            <path d="M16 9L21 9M16 13H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div class="index-features-section__card-content">
+          <h3 class="index-features-section__card-title">חוויית קריאה נקייה</h3>
+          <p class="index-features-section__card-text">הדפים נטענים נקיים ומסודרים — רק התוכן שרציתם לראות, בלי רעש ויזואלי שמפריע לקריאה ולהנאה מהגלישה.</p>
+        </div>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="index-features-section__card">
+        <div class="index-features-section__card-icon-wrap">
+          <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <circle cx="14" cy="14" r="10" stroke="currentColor" stroke-width="1.5"></circle>
+            <path d="M14 8V14L18 16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M6 6L4 4M22 6L24 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div class="index-features-section__card-content">
+          <h3 class="index-features-section__card-title">דפים מהירים יותר</h3>
+          <p class="index-features-section__card-text">ללא פרסומות, הדפים נטענים מהר יותר באופן משמעותי. פחות בקשות רשת, פחות סקריפטים — גלישה חלקה וזריזה בכל אתר.</p>
+        </div>
+      </article>
+
+      <!-- Card 4 -->
+      <article class="index-features-section__card">
+        <div class="index-features-section__card-icon-wrap">
+          <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M5 14C5 9 9 5 14 5C19 5 23 9 23 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            <path d="M14 5V3M5 14H3M25 14H23" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+            <circle cx="14" cy="14" r="3" stroke="currentColor" stroke-width="1.5"></circle>
+            <path d="M8 20C9.5 18.5 11.5 17.5 14 17.5C16.5 17.5 18.5 18.5 20 20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div class="index-features-section__card-content">
+          <h3 class="index-features-section__card-title">ללא הסחות דעת</h3>
+          <p class="index-features-section__card-text">מסיח הדעת הגדול ביותר באינטרנט הוא פרסומות. אנחנו חוסמים אותן כדי שתוכלו להתרכז במה שחשוב — בלי הפרעות, בלי פיתויים.</p>
+        </div>
+      </article>
+
+      <!-- Card 5 -->
+      <article class="index-features-section__card">
+        <div class="index-features-section__card-icon-wrap">
+          <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M6 14H10L13 8L15 20L18 14H22" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </div>
+        <div class="index-features-section__card-content">
+          <h3 class="index-features-section__card-title">הגדרה פשוטה בשניות</h3>
+          <p class="index-features-section__card-text">לא צריך להיות מומחה טכנולוגי. מלאו את הפרטים, ותוך שניות ספורות תתחילו ליהנות מגלישה נקייה — כל אחד יכול, גם בלי ידע מוקדם.</p>
+        </div>
+      </article>
+
+      <!-- Card 6 -->
+      <article class="index-features-section__card index-features-section__card--accent">
+        <div class="index-features-section__card-icon-wrap index-features-section__card-icon-wrap--free">
+          <svg data-element-type="icon" data-icon-type="svg" width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M14 3C14 3 6 7 6 14C6 18.4 9.6 22 14 22C18.4 22 22 18.4 22 14C22 7 14 3 14 3Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"></path>
+            <path d="M11 14L13.5 16.5L17 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+            <path d="M10 25H18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path>
+          </svg>
+        </div>
+        <div class="index-features-section__card-content">
+          <h3 class="index-features-section__card-title">חינם לגמרי — תמיד</h3>
+          <p class="index-features-section__card-text">חוסם הפרסומות של שילה הוא <strong>חינם לחלוטין</strong>. אין תשלום, אין מנוי, אין הפתעות. כי גלישה נקייה היא זכות, לא פריבילגיה.</p>
+        </div>
+        <span class="index-features-section__free-badge">חינם!</span>
+      </article>
+
+    </div>
+  </div>
+
+  <!-- Bottom stepped divider -->
+  <div class="index-features-section__divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 72" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="ifs-edge-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+          <stop offset="0%" stop-color="#7C3AED" stop-opacity="0.6"></stop>
+          <stop offset="50%" stop-color="#00D4FF" stop-opacity="0.4"></stop>
+          <stop offset="100%" stop-color="#7C3AED" stop-opacity="0.6"></stop>
+        </linearGradient>
+      </defs>
+      <!-- Fill bottom with light section color -->
+      <path d="M0,72 L0,36 L120,36 L120,20 L300,20 L300,36 L480,36 L480,12 L660,12 L660,36 L840,36 L840,24 L1020,24 L1020,36 L1200,36 L1200,72 Z" fill="var(--bg-light)"></path>
+      <!-- Edge highlight line -->
+      <path d="M0,36 L120,36 L120,20 L300,20 L300,36 L480,36 L480,12 L660,12 L660,36 L840,36 L840,24 L1020,24 L1020,36 L1200,36" fill="var(--bg-light)" stroke="url(#ifs-edge-grad)" stroke-width="1.5"></path>
+    </svg>
+  </div>
+</section>
+
+<section data-band-index="2" id="benefits" class="index-benefits-section" data-layout-spec="בית-benefits" dir="rtl">
+  <!-- Decorative background motifs -->
+  <div class="index-benefits-section__bg-glow" aria-hidden="true"></div>
+
+  <div class="index-benefits-section__container">
+
+    <!-- START column: text content -->
+    <div class="index-benefits-section__content-col">
+      <span class="index-benefits-section__label">למה לבחור בנו?</span>
+      <h2 class="index-benefits-section__heading">גלישה נקייה.<br>חיים שקטים יותר.</h2>
+      <p class="index-benefits-section__intro">חוסם הפרסומות של שילה מספק חוסם פרסומות בחינם שמסיר רעש חזותי, מאיץ טעינת דפים ומאפשר לך להתרכז במה שבאמת חשוב. פשוט, אמין, וללא עלות.</p>
+
+      <ul class="index-benefits-section__benefits-list">
+        <li class="index-benefits-section__benefit-item">
+          <div class="index-benefits-section__benefit-icon">
+            <svg data-element-type="icon" data-icon-type="svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M8 12l3 3 5-5"></path></svg>
+          </div>
+          <div class="index-benefits-section__benefit-text">
+            <h3 class="index-benefits-section__benefit-title">אפס פרסומות. אפס הסחות דעת.</h3>
+            <p class="index-benefits-section__benefit-desc">חסום באנרים, פרסומות קופצות וסרטוני וידאו אוטומטיים כדי לגלוש בממשק נקי ומסודר.</p>
+          </div>
+        </li>
+        <li class="index-benefits-section__benefit-item">
+          <div class="index-benefits-section__benefit-icon">
+            <svg data-element-type="icon" data-icon-type="svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+          </div>
+          <div class="index-benefits-section__benefit-text">
+            <h3 class="index-benefits-section__benefit-title">טעינה מהירה יותר</h3>
+            <p class="index-benefits-section__benefit-desc">דפים נטענים מהר יותר כשאין עשרות סקריפטים של פרסומות שמאטים את הדפדפן שלך.</p>
+          </div>
+        </li>
+        <li class="index-benefits-section__benefit-item">
+          <div class="index-benefits-section__benefit-icon">
+            <svg data-element-type="icon" data-icon-type="svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          </div>
+          <div class="index-benefits-section__benefit-text">
+            <h3 class="index-benefits-section__benefit-title">פרטיות מוגנת</h3>
+            <p class="index-benefits-section__benefit-desc">חסום עוקבים ורכיבי ניתוח שמנטרים את ההתנהגות שלך ברחבי האינטרנט.</p>
+          </div>
+        </li>
+        <li class="index-benefits-section__benefit-item">
+          <div class="index-benefits-section__benefit-icon">
+            <svg data-element-type="icon" data-icon-type="svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4l3 3"></path></svg>
+          </div>
+          <div class="index-benefits-section__benefit-text">
+            <h3 class="index-benefits-section__benefit-title">התקנה ב-60 שניות</h3>
+            <p class="index-benefits-section__benefit-desc">ממלאים פרטים, מאשרים — וזהו. אפשרות לגלוש נקי מתחילה מיד, ללא ידע טכני נדרש.</p>
+          </div>
+        </li>
+        <li class="index-benefits-section__benefit-item">
+          <div class="index-benefits-section__benefit-icon">
+            <svg data-element-type="icon" data-icon-type="svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"></path><path d="M12 6v6l4 2"></path></svg>
+          </div>
+          <div class="index-benefits-section__benefit-text">
+            <h3 class="index-benefits-section__benefit-title">בחינם לחלוטין</h3>
+            <p class="index-benefits-section__benefit-desc">חוסם הפרסומות של שילה הוא בחינם לגמרי — אין מנוי, אין תשלום נסתר, אין הפתעות.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <!-- END column: browser mockup imagery -->
+    <div class="index-benefits-section__image-col">
+      <div class="index-benefits-section__mockup-panel">
+        <!-- Browser chrome bar -->
+        <div class="index-benefits-section__browser-bar">
+          <div class="index-benefits-section__browser-dots">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="index-benefits-section__browser-url">shila-adblocker.co.il</div>
+        </div>
+        <!-- Split comparison labels -->
+        <div class="index-benefits-section__compare-labels">
+          <span class="index-benefits-section__label-before">לפני</span>
+          <span class="index-benefits-section__label-after">אחרי ✓</span>
+        </div>
+        <!-- The main image -->
+        <div class="index-benefits-section__image-wrapper">
+          <img loading="lazy" decoding="async" data-placeholder="index-benefits-image-1" data-context="Split-screen browser mockup comparison: left half shows a cluttered webpage with multiple intrusive banner ads, pop-up overlays, video ad boxes, and sidebar advertisements creating visual chaos with red/orange warning tones; right half shows the exact same webpage rendered cleanly with all ads removed — clean white space, readable article text, calm blue tones, and a small cyan shield badge in the corner indicating ad blocking is active. Style is flat UI illustration, premium tech product aesthetic." width="600" height="400" src="/assets/site-index-benefits-image-1.webp" alt="השוואה: דף אינטרנט עם פרסומות לעומת דף נקי לאחר חסימה" class="index-benefits-section__main-image">
+          <!-- Divider line between before/after -->
+          <div class="index-benefits-section__compare-divider" aria-hidden="true"></div>
+        </div>
+        <!-- Translucent backplate peeking from bottom-end corner -->
+        <div class="index-benefits-section__backplate" aria-hidden="true"></div>
+        <!-- Floating badge -->
+        <div class="index-benefits-section__floating-badge">
+          <svg data-element-type="icon" data-icon-type="svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          <span>פעיל ומגן</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom arc divider into darker section -->
+  <div class="index-benefits-section__divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 80" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,80 L0,55 Q300,0 600,30 Q900,60 1200,20 L1200,80 Z" fill="#0D1B2E"></path>
+    </svg>
+  </div>
+</section>
+
+<section data-band-index="3" id="testimonials" class="index-testimonials-section" data-layout-spec="בית-testimonials" dir="rtl">
+  <!-- Decorative background elements -->
+  <div class="its-bg-nebula" aria-hidden="true"></div>
+  <div class="its-star-field" aria-hidden="true">
+    <svg data-no-icon-edit="true" aria-hidden="true" width="100%" height="100%" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="80" cy="60" r="1.2" fill="white" opacity="0.35"></circle>
+      <circle cx="200" cy="130" r="0.8" fill="white" opacity="0.25"></circle>
+      <circle cx="350" cy="40" r="1.5" fill="white" opacity="0.4"></circle>
+      <circle cx="500" cy="90" r="0.9" fill="white" opacity="0.3"></circle>
+      <circle cx="650" cy="25" r="1.1" fill="white" opacity="0.38"></circle>
+      <circle cx="780" cy="110" r="0.7" fill="white" opacity="0.22"></circle>
+      <circle cx="920" cy="55" r="1.3" fill="white" opacity="0.32"></circle>
+      <circle cx="1080" cy="80" r="1" fill="white" opacity="0.28"></circle>
+      <circle cx="1150" cy="30" r="0.8" fill="white" opacity="0.4"></circle>
+      <circle cx="140" cy="300" r="0.9" fill="white" opacity="0.2"></circle>
+      <circle cx="430" cy="250" r="1.2" fill="white" opacity="0.3"></circle>
+      <circle cx="700" cy="320" r="0.7" fill="white" opacity="0.18"></circle>
+      <circle cx="990" cy="270" r="1.1" fill="white" opacity="0.25"></circle>
+      <circle cx="60" cy="450" r="1" fill="white" opacity="0.22"></circle>
+      <circle cx="310" cy="500" r="0.8" fill="white" opacity="0.28"></circle>
+      <circle cx="580" cy="480" r="1.3" fill="white" opacity="0.35"></circle>
+      <circle cx="850" cy="520" r="0.9" fill="white" opacity="0.2"></circle>
+      <circle cx="1100" cy="460" r="1.1" fill="white" opacity="0.3"></circle>
+    </svg>
+  </div>
+
+  <div class="its-container">
+    <!-- Section header -->
+    <header class="its-header">
+      <span class="its-label">מה אומרים המשתמשים שלנו</span>
+      <h2 class="its-title">אלפי גולשים כבר נהנים מגלישה נקייה</h2>
+      <p class="its-subtitle">חוסם הפרסומות של שילה — חינמי לחלוטין, פשוט להפעלה, ומשנה את חוויית הגלישה מהיום הראשון.</p>
+    </header>
+
+    <!-- Testimonials grid -->
+    <div class="its-grid">
+
+      <!-- Card 1 -->
+      <article class="its-card">
+        <div class="its-card-glow" aria-hidden="true"></div>
+        <div class="its-stars" aria-label="דירוג 5 כוכבים">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+        </div>
+        <blockquote class="its-quote">
+          <p>"הגלישה שלי השתנתה לחלוטין. אין יותר פרסומות שמפריעות לקריאה, אין פופ-אפים מעצבנים — רק התוכן שאני רוצה לראות. לא האמנתי שזה יהיה כל כך פשוט."</p>
+        </blockquote>
+        <footer class="its-identity">
+          <div class="its-avatar" aria-hidden="true">מ</div>
+          <div class="its-identity-info">
+            <strong class="its-name">מיכל ר.</strong>
+            <span class="its-role">גולשת יומיומית</span>
+          </div>
+        </footer>
+      </article>
+
+      <!-- Card 2 -->
+      <article class="its-card its-card--featured">
+        <div class="its-card-glow its-card-glow--cyan" aria-hidden="true"></div>
+        <div class="its-featured-badge">הכי פופולרי</div>
+        <div class="its-stars" aria-label="דירוג 5 כוכבים">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+        </div>
+        <blockquote class="its-quote">
+          <p>"סוף סוף חוסם פרסומות בחינם שעובד בלי להתקין תוספים מסובכים. מילאתי את הפרטים ותוך דקות הכל עבד. ממליץ לכל מי שמחפש לגלוש נקי בלי כאב ראש."</p>
+        </blockquote>
+        <footer class="its-identity">
+          <div class="its-avatar its-avatar--cyan" aria-hidden="true">א</div>
+          <div class="its-identity-info">
+            <strong class="its-name">אבי כ.</strong>
+            <span class="its-role">מפתח תוכנה</span>
+          </div>
+        </footer>
+      </article>
+
+      <!-- Card 3 -->
+      <article class="its-card">
+        <div class="its-card-glow" aria-hidden="true"></div>
+        <div class="its-stars" aria-label="דירוג 5 כוכבים">
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+          <i class="fas fa-star"></i>
+        </div>
+        <blockquote class="its-quote">
+          <p>"השתמשתי בכל מיני כלים לחסימת פרסומות בעבר, אבל חוסם הפרסומות של שילה הוא הפשוט ביותר שניסיתי. חינמי לגמרי, עובד מיד, ודפי האינטרנט נטענים הרבה יותר מהר."</p>
+        </blockquote>
+        <footer class="its-identity">
+          <div class="its-avatar" aria-hidden="true">ד</div>
+          <div class="its-identity-info">
+            <strong class="its-name">דנה ש.</strong>
+            <span class="its-role">סטודנטית ועורכת תוכן</span>
+          </div>
+        </footer>
+      </article>
+
+    </div>
+
+    <!-- Credibility strip -->
+    <div class="its-trust-strip" role="list">
+      <div class="its-trust-item" role="listitem">
+        <i class="fas fa-shield-alt its-trust-icon" aria-hidden="true"></i>
+        <span>חינמי לחלוטין — ללא תשלום</span>
+      </div>
+      <div class="its-trust-divider" aria-hidden="true"></div>
+      <div class="its-trust-item" role="listitem">
+        <i class="fas fa-bolt its-trust-icon" aria-hidden="true"></i>
+        <span>הפעלה מיידית תוך דקות</span>
+      </div>
+      <div class="its-trust-divider" aria-hidden="true"></div>
+      <div class="its-trust-item" role="listitem">
+        <i class="fas fa-ban its-trust-icon" aria-hidden="true"></i>
+        <span>חוסם 99% מהפרסומות</span>
+      </div>
+      <div class="its-trust-divider" aria-hidden="true"></div>
+      <div class="its-trust-item" role="listitem">
+        <i class="fas fa-users its-trust-icon" aria-hidden="true"></i>
+        <span>אלפי משתמשים פעילים</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom signal-wave divider -->
+  <div class="its-divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <filter id="its-glow-filter" x="-20%" y="-100%" width="140%" height="400%">
+          <feGaussianBlur in="SourceGraphic" stdDeviation="2.5" result="blur"></feGaussianBlur>
+          <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0  0 0.82 1 0 0  0 0 0 0 1  0 0 0 0.7 0" result="coloredBlur"></feColorMatrix>
+          <feMerge><feMergeNode in="coloredBlur"></feMergeNode><feMergeNode in="SourceGraphic"></feMergeNode></feMerge>
+        </filter>
+      </defs>
+      <!-- Glow signal line -->
+      <polyline points="0,30 60,28 120,32 180,26 240,34 300,24 360,36 420,22 480,38 540,20 600,36 660,22 720,38 780,24 840,34 900,26 960,32 1020,28 1080,32 1140,26 1200,30" fill="none" stroke="var(--primary)" stroke-width="1.5" opacity="0.55" filter="url(#its-glow-filter)"></polyline>
+      <!-- Fill bottom to next section -->
+      <path d="M0,60 L0,30 Q60,28 120,32 T240,34 Q300,24 360,36 T480,38 Q540,20 600,36 T720,38 Q780,24 840,34 T960,32 Q1020,28 1080,32 T1200,30 L1200,60 Z" fill="var(--bg-light)"></path>
+    </svg>
+  </div>
+</section>
+
+<section data-band-index="4" id="stats" class="index-stats-section" data-layout-spec="בית-stats" dir="rtl">
+  <div class="index-stats-container">
+
+    <!-- Section Header -->
+    <div class="index-stats-header">
+      <span class="index-stats-eyebrow">מספרים שמדברים בעד עצמם</span>
+      <h2 class="index-stats-title">למה לגלוש עם פרסומות<br>כשאפשר בלעדיהן — בחינם?</h2>
+      <p class="index-stats-subtitle">חוסם הפרסומות של שילה נבנה על עיקרון אחד פשוט:<br>גלישה נקייה, מהירה ונוחה — לכולם, ללא עלות.</p>
+    </div>
+
+    <!-- Horizontal Rule -->
+    <div class="index-stats-rule" aria-hidden="true"></div>
+
+    <!-- Metrics Grid -->
+    <div class="index-stats-grid">
+
+      <article class="index-stats-tile">
+        <div class="index-stats-tile-inner">
+          <div class="index-stats-number">100%</div>
+          <div class="index-stats-label">חינם לגמרי</div>
+          <p class="index-stats-desc">ללא תשלום, ללא מנוי, ללא כרטיס אשראי — לנצח.</p>
+        </div>
+        <div class="index-stats-tile-accent" aria-hidden="true"></div>
+      </article>
+
+      <article class="index-stats-tile">
+        <div class="index-stats-tile-inner">
+          <div class="index-stats-number">~3 דק'</div>
+          <div class="index-stats-label">הגדרה מהירה</div>
+          <p class="index-stats-desc">מילוי פרטים פשוט, ותוך דקות אתם גולשים נקי ללא הפרעות.</p>
+        </div>
+        <div class="index-stats-tile-accent" aria-hidden="true"></div>
+      </article>
+
+      <article class="index-stats-tile">
+        <div class="index-stats-tile-inner">
+          <div class="index-stats-number">0 מודעות</div>
+          <div class="index-stats-label">גלישה נקייה</div>
+          <p class="index-stats-desc">ללא באנרים, ללא פופ-אפים, ללא מודעות וידאו שמפריעות לכם.</p>
+        </div>
+        <div class="index-stats-tile-accent" aria-hidden="true"></div>
+      </article>
+
+      <article class="index-stats-tile">
+        <div class="index-stats-tile-inner">
+          <div class="index-stats-number">כל אתר</div>
+          <div class="index-stats-label">תאימות רחבה</div>
+          <p class="index-stats-desc">עובד על כל דפדפן ועל כל אתר — חדשות, יוטיוב, רשתות חברתיות ועוד.</p>
+        </div>
+        <div class="index-stats-tile-accent" aria-hidden="true"></div>
+      </article>
+
+    </div>
+    <!-- End Grid -->
+
+  </div>
+
+  <!-- Bottom Divider: dark gradient wash with glowing nodes -->
+  <div class="index-stats-divider-wrapper" aria-hidden="true">
+    <!-- Glowing nodes -->
+    <div class="index-stats-node index-stats-node-1"></div>
+    <div class="index-stats-node index-stats-node-2"></div>
+    <div class="index-stats-node index-stats-node-3"></div>
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 120" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="statsToCtaGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="transparent"></stop>
+          <stop offset="60%" stop-color="rgba(5,10,20,0.6)"></stop>
+          <stop offset="100%" stop-color="#050A14"></stop>
+        </linearGradient>
+      </defs>
+      <path d="M0,120 L0,55 Q200,35 400,58 T800,42 Q1000,32 1200,50 L1200,120 Z" fill="#0D1B2E"></path>
+      <path d="M0,120 L0,72 Q300,52 600,65 T1200,60 L1200,120 Z" fill="#0D1B2E"></path>
+    </svg>
+  </div>
+
+</section>
+
+<section data-band-index="5" id="process" class="index-process-section" data-layout-spec="בית-process" dir="rtl">
+  <!-- Decorative background grid pattern -->
+  <div class="index-process-section__bg-grid" aria-hidden="true"></div>
+  <!-- Decorative nebula glow -->
+  <div class="index-process-section__nebula" aria-hidden="true"></div>
+
+  <div class="index-process-section__container">
+    <!-- Section header -->
+    <div class="index-process-section__header">
+      <span class="index-process-section__eyebrow">איך זה עובד</span>
+      <h2 class="index-process-section__title">שלושה צעדים פשוטים לגלישה נקייה</h2>
+      <p class="index-process-section__subtitle">חוסם הפרסומות של שילה הוא בחינם לחלוטין. כל מה שצריך הוא למלא פרטים, לקבל הנחיות, ולהתחיל לגלוש ללא הפרעות.</p>
+    </div>
+
+    <!-- Steps grid -->
+    <div class="index-process-section__steps">
+
+      <!-- Step 1 -->
+      <article class="index-process-section__step">
+        <div class="index-process-section__step-badge">
+          <span class="index-process-section__step-number">01</span>
+        </div>
+        <div class="index-process-section__step-content">
+          <h3 class="index-process-section__step-title">מלאו את הפרטים שלכם</h3>
+          <p class="index-process-section__step-text">מלאו את טופס ההרשמה הפשוט עם שם פרטי, שם משפחה, מספר טלפון וכתובת מייל. כל הפרטים נשמרים בצורה מאובטחת ומשמשים אך ורק לצורך אישור הרשמתכם לשירות.</p>
+        </div>
+        <div class="index-process-section__step-connector" aria-hidden="true">
+          <svg data-no-icon-edit="true" aria-hidden="true" width="40" height="2" viewBox="0 0 40 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="0" y1="1" x2="40" y2="1" stroke="url(#connectorGrad1)" stroke-width="1.5" stroke-dasharray="4 3"></line>
+            <defs>
+              <linearGradient id="connectorGrad1" x1="0" y1="0" x2="40" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#00D4FF" stop-opacity="0.6"></stop>
+                <stop offset="100%" stop-color="#7C3AED" stop-opacity="0.6"></stop>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+      </article>
+
+      <!-- Step 2 -->
+      <article class="index-process-section__step">
+        <div class="index-process-section__step-badge index-process-section__step-badge--violet">
+          <span class="index-process-section__step-number">02</span>
+        </div>
+        <div class="index-process-section__step-content">
+          <h3 class="index-process-section__step-title">קבלו הנחיות אישיות</h3>
+          <p class="index-process-section__step-text">לאחר קבלת פרטיכם, נשלח אליכם הנחיות ברורות ומדויקות להתקנת חוסם הפרסומות בדפדפן שלכם. התהליך פשוט ומתאים לכל רמת ידע טכנולוגי.</p>
+        </div>
+        <div class="index-process-section__step-connector" aria-hidden="true">
+          <svg data-no-icon-edit="true" aria-hidden="true" width="40" height="2" viewBox="0 0 40 2" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <line x1="0" y1="1" x2="40" y2="1" stroke="url(#connectorGrad2)" stroke-width="1.5" stroke-dasharray="4 3"></line>
+            <defs>
+              <linearGradient id="connectorGrad2" x1="0" y1="0" x2="40" y2="0" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#00D4FF" stop-opacity="0.6"></stop>
+                <stop offset="100%" stop-color="#7C3AED" stop-opacity="0.6"></stop>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+      </article>
+
+      <!-- Step 3 -->
+      <article class="index-process-section__step">
+        <div class="index-process-section__step-badge index-process-section__step-badge--accent">
+          <span class="index-process-section__step-number">03</span>
+        </div>
+        <div class="index-process-section__step-content">
+          <h3 class="index-process-section__step-title">גלשו נקי — בחינם לגמרי</h3>
+          <p class="index-process-section__step-text">התקינו את חוסם הפרסומות של שילה ותיהנו מגלישה נקייה, מהירה וללא הפרעות פרסומיות. אפשרות לגלוש נקי היא זכות של כל גולש — ואנחנו כאן כדי לאפשר זאת בחינם.</p>
+        </div>
+      </article>
+
+    </div>
+    <!-- /Steps grid -->
+
+    <!-- Reassurance strip -->
+    <div class="index-process-section__reassurance">
+      <div class="index-process-section__reassurance-item">
+        <svg data-element-type="icon" data-icon-type="svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <span>ללא עלות</span>
+      </div>
+      <div class="index-process-section__reassurance-item">
+        <svg data-element-type="icon" data-icon-type="svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <span>הגדרה פשוטה</span>
+      </div>
+      <div class="index-process-section__reassurance-item">
+        <svg data-element-type="icon" data-icon-type="svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <span>פרטיות מלאה</span>
+      </div>
+      <div class="index-process-section__reassurance-item">
+        <svg data-element-type="icon" data-icon-type="svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><polyline points="20 6 9 17 4 12"></polyline></svg>
+        <span>תמיכה בכל דפדפן</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom divider: luminous grid fade into next section -->
+  <div class="index-process-section__divider-wrapper">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 90" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="dividerFade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#050A14" stop-opacity="0"></stop>
+          <stop offset="100%" stop-color="#050A14" stop-opacity="1"></stop>
+        </linearGradient>
+      </defs>
+      <path d="M0,90 L0,30 Q150,18 300,28 T600,20 Q750,14 900,26 T1200,18 L1200,90 Z" fill="#060C18"></path>
+      <rect x="0" y="0" width="1200" height="90" fill="url(#dividerFade)"></rect>
+    </svg>
+  </div>
+</section>
+
+<section data-band-index="6" id="cta" class="index-cta-section" data-layout-spec="בית-cta" dir="rtl">
+  <!-- Decorative background elements -->
+  <div class="index-cta-section__bg-glow index-cta-section__bg-glow--cyan" aria-hidden="true"></div>
+  <div class="index-cta-section__bg-glow index-cta-section__bg-glow--violet" aria-hidden="true"></div>
+  <div class="index-cta-section__star-field" aria-hidden="true">
+    <svg data-no-icon-edit="true" aria-hidden="true" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;opacity:0.35;">
+      <circle cx="120" cy="80" r="1.2" fill="white"></circle><circle cx="340" cy="150" r="0.8" fill="white"></circle><circle cx="560" cy="40" r="1.5" fill="white"></circle><circle cx="780" cy="200" r="0.9" fill="white"></circle><circle cx="950" cy="70" r="1.1" fill="white"></circle><circle cx="1100" cy="130" r="0.7" fill="white"></circle><circle cx="60" cy="300" r="1.3" fill="white"></circle><circle cx="220" cy="420" r="0.8" fill="white"></circle><circle cx="450" cy="350" r="1.0" fill="white"></circle><circle cx="680" cy="480" r="0.6" fill="white"></circle><circle cx="870" cy="320" r="1.4" fill="white"></circle><circle cx="1050" cy="450" r="0.9" fill="white"></circle><circle cx="180" cy="540" r="1.1" fill="white"></circle><circle cx="400" cy="570" r="0.7" fill="white"></circle><circle cx="700" cy="550" r="1.2" fill="white"></circle><circle cx="1000" cy="580" r="0.8" fill="white"></circle>
+    </svg>
+  </div>
+
+  <div class="index-cta-section__container">
+    <!-- Section header -->
+    <header class="index-cta-section__header">
+      <div class="index-cta-section__badge">חינם לחלוטין</div>
+      <h2 class="index-cta-section__title">קבל חוסם פרסומות בחינם<br>ותתחיל לגלוש נקי עוד היום</h2>
+      <p class="index-cta-section__subtitle">מלא את הפרטים הבאים ונפעיל עבורך את חוסם הפרסומות של שילה — בלי עלויות, בלי פרסומות, בלי בלאגן.</p>
+    </header>
+
+    <!-- Form panel -->
+    <div class="index-cta-section__panel">
+      <div class="index-cta-section__panel-rim" aria-hidden="true"></div>
+
+      <div class="index-cta-section__panel-header">
+        <span class="index-cta-section__panel-dot index-cta-section__panel-dot--red"></span>
+        <span class="index-cta-section__panel-dot index-cta-section__panel-dot--yellow"></span>
+        <span class="index-cta-section__panel-dot index-cta-section__panel-dot--green"></span>
+        <span class="index-cta-section__panel-label">activation_request.sh</span>
+      </div>
+
+      <form class="contact-form index-cta-section__form" id="shila-cta-form" novalidate="">
+        <div class="index-cta-section__form-row">
+          <div class="index-cta-section__field">
+            <label class="index-cta-section__label" for="cta-first-name">שם פרטי</label>
+            <input class="index-cta-section__input" type="text" id="cta-first-name" name="first_name" placeholder="הכנס שם פרטי" required="" autocomplete="given-name">
+          </div>
+          <div class="index-cta-section__field">
+            <label class="index-cta-section__label" for="cta-last-name">שם משפחה</label>
+            <input class="index-cta-section__input" type="text" id="cta-last-name" name="last_name" placeholder="הכנס שם משפחה" required="" autocomplete="family-name">
+          </div>
+        </div>
+
+        <div class="index-cta-section__form-row">
+          <div class="index-cta-section__field">
+            <label class="index-cta-section__label" for="cta-phone">מספר טלפון</label>
+            <input class="index-cta-section__input" type="tel" id="cta-phone" name="phone" placeholder="05X-XXXXXXX" required="" autocomplete="tel">
+          </div>
+          <div class="index-cta-section__field">
+            <label class="index-cta-section__label" for="cta-email">כתובת מייל</label>
+            <input class="index-cta-section__input" type="email" id="cta-email" name="email" placeholder="your@email.com" required="" autocomplete="email">
+            <span class="index-cta-section__field-error" id="email-error" role="alert"></span>
+          </div>
+        </div>
+
+        <div class="index-cta-section__field index-cta-section__field--full">
+          <label class="index-cta-section__label" for="cta-message">הערות (אופציונלי)</label>
+          <textarea class="index-cta-section__input index-cta-section__textarea" id="cta-message" name="message" rows="3" placeholder="ספר לנו על הדפדפן שלך או כל שאלה שיש לך..."></textarea>
+        </div>
+
+        <div class="privacy-consent index-cta-section__privacy">
+          <label class="privacy-consent-label">
+            <input type="checkbox" name="privacy_consent" class="privacy-consent-checkbox" required="">
+            <span>קראתי ואני מסכים/ה ל<a href="/terms" target="_blank">תנאי השימוש</a> ול<a href="/privacy" target="_blank">מדיניות הפרטיות</a></span>
+          </label>
+        </div>
+
+        <button type="submit" class="index-cta-section__submit btn-cta">
+          <i class="fas fa-shield-alt" aria-hidden="true"></i>
+          הפעל חסימת פרסומות — בחינם
+        </button>
+
+        <p class="index-cta-section__reassurance">
+          <i class="fas fa-lock" aria-hidden="true"></i>
+          הפרטים שלך מאובטחים ולא יועברו לצד שלישי. אנחנו כאן רק כדי לעזור לך לגלוש נקי.
+        </p>
+      </form>
+    </div>
+
+    <!-- Trust indicators -->
+    <div class="index-cta-section__trust">
+      <div class="index-cta-section__trust-item">
+        <i class="fas fa-check-circle" aria-hidden="true"></i>
+        <span>ללא עלות לנצח</span>
+      </div>
+      <div class="index-cta-section__trust-item">
+        <i class="fas fa-bolt" aria-hidden="true"></i>
+        <span>הפעלה מיידית</span>
+      </div>
+      <div class="index-cta-section__trust-item">
+        <i class="fas fa-eye-slash" aria-hidden="true"></i>
+        <span>אפס פרסומות</span>
+      </div>
+      <div class="index-cta-section__trust-item">
+        <i class="fas fa-user-shield" aria-hidden="true"></i>
+        <span>פרטיות מלאה</span>
+      </div>
+    </div>
+  </div>
+</section>
+  </main>
+  
+  <footer class="site-footer" dir="rtl" aria-label="כותרת תחתית של האתר"><div class="footer-glow-top"></div><div class="footer-container"><div class="footer-top"><div class="footer-col footer-col--brand"><img src="/assets/ad-blocking-browser-tools-logo.webp" alt="חוסם הפרסומות של שילה - פשוט לגלוש נקי!" class="logo"><p class="footer-tagline">גלישה נקייה, מהירה וחופשית מפרסומות מטרידות. חוסם הפרסומות של שילה מגן עליך בכל לשונית ובכל אתר — בלי מאמץ, בלי עלות.</p><div class="footer-badge"><i class="fas fa-shield-alt"></i> <span>הגנה מלאה — חינם לגמרי</span></div></div><div class="footer-col footer-col--links"><h3 class="footer-heading">ניווט מהיר</h3><ul class="footer-nav" aria-label="קישורי ניווט מהיר"><li><a href="#features"><i class="fas fa-chevron-left footer-nav-icon"></i>Features</a></li><li><a href="#benefits"><i class="fas fa-chevron-left footer-nav-icon"></i>Benefits</a></li><li><a href="#testimonials"><i class="fas fa-chevron-left footer-nav-icon"></i>Testimonials</a></li><li><a href="#stats"><i class="fas fa-chevron-left footer-nav-icon"></i>Stats</a></li><li><a href="#process"><i class="fas fa-chevron-left footer-nav-icon"></i>Process</a></li></ul></div><div class="footer-col footer-col--contact"><h3 class="footer-heading">יצירת קשר</h3><ul class="footer-contact" aria-label="פרטי יצירת קשר"><li><span class="contact-icon"><i class="fas fa-envelope"></i></span><span class="contact-text"><a href="mailto:[business_email]">[business_email]</a></span></li><li><span class="contact-icon"><i class="fas fa-phone"></i></span><span class="contact-text"><a href="tel:[business_phone]">[business_phone]</a></span></li><li><a href="/"><span class="contact-icon"><i class="fas fa-map-marker-alt"></i></span><span class="contact-text">[business_address]</span></a></li></ul></div><div class="footer-col footer-col--social"><h3 class="footer-heading">עקבו אחרינו</h3><div class="footer-social-links" aria-label="קישורים לרשתות חברתיות"></div><div class="footer-hours"><h4 class="footer-hours-title">שעות פעילות</h4><ul class="footer-hours-list"><li><a href="/"><span class="day">ראשון–חמישי</span><span class="time">09:00–18:00</span></a></li><li><a href="/"><span class="day">שישי</span><span class="time">09:00–13:00</span></a></li><li><a href="/"><span class="day">שבת</span><span class="time closed">סגור</span></a></li></ul></div></div></div><div class="footer-divider"></div><div class="footer-bottom"><p class="footer-copyright">© 2026 חוסם הפרסומות של שילה - פשוט לגלוש נקי!. כל הזכויות שמורות.</p><div class="footer-legal"><a href="/privacy">מדיניות פרטיות</a><span class="footer-legal-sep" aria-hidden="true"></span><a href="/terms">תנאי שימוש</a><span class="footer-legal-sep" aria-hidden="true"></span><a href="/accessibility">נגישות</a><span class="footer-legal-sep" aria-hidden="true"></span><a href="https://zappy5.com" target="_blank" class="zappy-attribution">נוצר באמצעות Zappy</a></div></div></div></footer>
+  
+  <a href="https://wa.me/[whatsapp_handle]" class="whatsapp-float" aria-label="WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+  
+  <div data-integration="accessibility:toolbar"></div>
+
+    <script src="/script.js"></script>
+
+    <script id="zappy-mobile-submenu-script">
+    (function() {
+      function initMobileSubmenuToggles() {
+        if (window.innerWidth > 768) {
+          document.querySelectorAll('.mobile-submenu-toggle').forEach(function(btn) { btn.remove(); });
+          document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) { menu.classList.remove('mobile-expanded'); });
+          return;
+        }
+        var items = document.querySelectorAll('.nav-menu li:has(.sub-menu), nav li:has(.sub-menu), .navbar li:has(.sub-menu), #navMenu li:has(.sub-menu)');
+        items.forEach(function(li) {
+          if (li.querySelector('.mobile-submenu-toggle')) return;
+          var submenu = li.querySelector('.sub-menu');
+          var parentLink = li.querySelector(':scope > a');
+          if (!submenu || !parentLink) return;
+          var toggleBtn = document.createElement('button');
+          toggleBtn.className = 'mobile-submenu-toggle';
+          toggleBtn.setAttribute('aria-label', 'Toggle submenu');
+          toggleBtn.setAttribute('type', 'button');
+          parentLink.insertAdjacentElement('afterend', toggleBtn);
+          toggleBtn.addEventListener('click', function(e) {
+            e.preventDefault(); e.stopPropagation();
+            document.querySelectorAll('.sub-menu.mobile-expanded').forEach(function(menu) {
+              if (menu !== submenu) { menu.classList.remove('mobile-expanded'); var t = menu.parentElement.querySelector('.mobile-submenu-toggle'); if(t) t.classList.remove('expanded'); }
+            });
+            submenu.classList.toggle('mobile-expanded');
+            toggleBtn.classList.toggle('expanded');
+          });
+        });
+      }
+      if (document.readyState === 'loading') { document.addEventListener('DOMContentLoaded', initMobileSubmenuToggles); }
+      else { initMobileSubmenuToggles(); }
+      var resizeTimer; window.addEventListener('resize', function() { clearTimeout(resizeTimer); resizeTimer = setTimeout(initMobileSubmenuToggles, 250); });
+      // Re-initialize when mobile menu becomes visible (MutationObserver)
+      var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes') {
+            var target = mutation.target;
+            if (target.classList && (target.classList.contains('active') || target.classList.contains('open'))) {
+              setTimeout(initMobileSubmenuToggles, 100);
+            }
+          }
+        });
+      });
+      setTimeout(function() {
+        document.querySelectorAll('.mobile-menu, .nav-menu, #navMenu, nav').forEach(function(menu) {
+          observer.observe(menu, { attributes: true, attributeFilter: ['class', 'style'] });
+        });
+      }, 500);
+    })();
+    </script>
+
+    <script id="zappy-navbar-scroll-effect">
+    (function(){
+      var nb=document.querySelector('nav.navbar,.navbar:not(.zappy-catalog-menu)');
+      var cm=document.querySelector('.zappy-catalog-menu,#zappy-catalog-menu');
+      if(!nb)return;
+      var fb='rgba(245,247,250,0.85)';
+      var th=60;
+      var rs=getComputedStyle(document.documentElement);
+      var td=rs.getPropertyValue('--text-dark').trim()||'#1a1a1a';
+      var tl=rs.getPropertyValue('--text-light').trim()||'#ffffff';
+      var st=true?td:tl;
+      nb.style.transition='background 0.3s ease,backdrop-filter 0.3s ease,-webkit-backdrop-filter 0.3s ease,box-shadow 0.3s ease';
+      if(cm)cm.style.transition='background 0.3s ease,backdrop-filter 0.3s ease,-webkit-backdrop-filter 0.3s ease';
+      var neSel='a,.navbar-brand,.navbar-brand a,.dropdown-toggle,.mobile-toggle,.phone-header-btn,.mobile-hamburger-btn,.mobile-close-btn,.mobile-submenu-toggle,.nav-link';
+      var skipCls=['cart-link','login-link','nav-search-toggle','search-toggle'];
+      function sTC(c,clr){var els=c.querySelectorAll(neSel);for(var i=0;i<els.length;i++){var sk=false;if(els[i].closest('.sub-menu')||els[i].closest('.dropdown-menu')){sk=true;}for(var j=0;j<skipCls.length;j++){if(els[i].classList.contains(skipCls[j])){sk=true;break;}}if(!sk)els[i].style.setProperty('color',clr,'important');}}
+      function cTC(c){var els=c.querySelectorAll(neSel);for(var i=0;i<els.length;i++){if(els[i].closest('.sub-menu')||els[i].closest('.dropdown-menu'))continue;els[i].style.removeProperty('color');}}
+      function applyScrolled(){
+        nb.classList.add('scrolled');
+        if(window.innerWidth>768){
+          nb.style.setProperty('--frosted-text',st);
+          nb.style.setProperty('background-image','none','important');
+          nb.style.setProperty('background-color',fb,'important');
+          nb.style.backdropFilter='blur(12px)';nb.style.webkitBackdropFilter='blur(12px)';nb.style.boxShadow='0 2px 16px rgba(0,0,0,0.12)';
+          sTC(nb,st);
+        }
+        if(cm){cm.classList.add('scrolled');if(window.innerWidth>768){cm.style.setProperty('background',fb,'important');cm.style.setProperty('backdrop-filter','blur(12px)','important');cm.style.setProperty('-webkit-backdrop-filter','blur(12px)','important');sTC(cm,st);}}
+      }
+      function onS(){
+        if(window._zappyNavNoDarkHero) return;
+        if(window.innerWidth<=768){nb.classList.remove('scrolled');cTC(nb);if(cm){cm.classList.remove('scrolled');cTC(cm);}return;}
+        var y=window.scrollY||window.pageYOffset;
+        if(y>th){
+          nb.classList.add('scrolled');nb.style.setProperty('background-color',fb,'important');nb.style.setProperty('background-image','none','important');
+          nb.style.setProperty('--frosted-text',st);nb.style.backdropFilter='blur(12px)';nb.style.webkitBackdropFilter='blur(12px)';nb.style.boxShadow='0 2px 16px rgba(0,0,0,0.12)';
+          sTC(nb,st);
+          if(cm){cm.classList.add('scrolled');cm.style.setProperty('background',fb,'important');cm.style.setProperty('backdrop-filter','blur(12px)','important');cm.style.setProperty('-webkit-backdrop-filter','blur(12px)','important');sTC(cm,st);}
+        }else{
+          nb.classList.remove('scrolled');nb.style.setProperty('background-color','transparent','important');nb.style.removeProperty('background-image');
+          nb.style.removeProperty('--frosted-text');nb.style.backdropFilter='none';nb.style.webkitBackdropFilter='none';nb.style.boxShadow='none';
+          cTC(nb);
+          if(cm){cm.classList.remove('scrolled');cm.style.setProperty('background','transparent','important');cm.style.setProperty('backdrop-filter','none','important');cm.style.setProperty('-webkit-backdrop-filter','none','important');cTC(cm);}
+        }
+      }
+      function sLum(rv,gv,bv){rv/=255;gv/=255;bv/=255;rv=rv<=0.03928?rv/12.92:Math.pow((rv+0.055)/1.055,2.4);gv=gv<=0.03928?gv/12.92:Math.pow((gv+0.055)/1.055,2.4);bv=bv<=0.03928?bv/12.92:Math.pow((bv+0.055)/1.055,2.4);return 0.2126*rv+0.7152*gv+0.0722*bv;}
+      window.addEventListener('scroll',onS,{passive:true});
+      window.addEventListener('resize',onS,{passive:true});
+      onS();
+      var heroEl=document.querySelector('section[class*="hero"],[data-hero-type],main>section:first-child');
+      var hasDH=false;
+      if(heroEl){var hCs=getComputedStyle(heroEl);var hBI=hCs.backgroundImage;if(hBI&&hBI!=='none'){if(hBI.indexOf('url(')!==-1){var hM2=hCs.backgroundColor.match(/\d+/g);if(hM2&&hM2.length>=3){hasDH=sLum(parseInt(hM2[0]),parseInt(hM2[1]),parseInt(hM2[2]))<0.4;}else{hasDH=true;}}else if(hBI.indexOf('gradient')!==-1){var cM=hBI.match(/rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/g);if(cM&&cM.length>0){var tLm=0;for(var ci=0;ci<cM.length;ci++){var pts=cM[ci].match(/\d+/g);tLm+=sLum(parseInt(pts[0]),parseInt(pts[1]),parseInt(pts[2]));}hasDH=(tLm/cM.length)<0.4;}else{hasDH=true;}}else{hasDH=true;}}else{var hM=hCs.backgroundColor.match(/\d+/g);if(hM&&hM.length>=3){hasDH=sLum(parseInt(hM[0]),parseInt(hM[1]),parseInt(hM[2]))<0.4;}}}
+      if(!hasDH){window.removeEventListener('scroll',onS);window.removeEventListener('resize',onS);applyScrolled();window._zappyNavNoDarkHero=true;}
+    })();
+    </script>
+</body>
+</html>

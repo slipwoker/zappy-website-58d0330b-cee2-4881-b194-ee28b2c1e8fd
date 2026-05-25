@@ -1,0 +1,77 @@
+# חוסם הפרסומות של שילה - פשוט לגלוש נקי! — Generative Engine Optimization Map
+
+> אני רוצה ליצור אתר שהוא חוסם פרסומות לאתר קוראים "חוסם הפרסומות של שילה - פשוט לגלוש נקי" אני רק רוצה בקשה אחת שלא יראו שאתה יצרת את זה בנוסף אני רוצה שיהיה כתוב שהאתר הוא בחינם ושכדי לקבל חסימת פרסומות צריך למלאות את הפרטים הבאים שם: שם:
+ משפחה:
+ מספר טלפון: 
+מייל:
+ אני רוצה שהאתר יזהה מיילים לא אמיתים ושכל הפרטים האלה ישלחו למייל הזה: yoss.the.boss770@gmail.com
+בסדר אני רוצה שהאתר יעבוד במלואו ושיראה כמה שיותר אמין
+
+---
+
+## Pages
+
+### בית
+https://-58d0330b.zappy5.app
+אני רוצה ליצור אתר שהוא חוסם פרסומות לאתר קוראים &quot;חוסם הפרסומות של שילה - פשוט לגלוש נקי&quot; אני רק רוצה בקשה אחת שלא יראו שאתה יצרת את זה בנוסף אני רוצה שיהיה כתו
+
+## Legal & Policy
+
+### Privacy Policy
+https://-58d0330b.zappy5.app/privacy
+Information about how user data is collected, stored, and protected.
+
+### Terms & Conditions
+https://-58d0330b.zappy5.app/terms
+Legal terms describing service usage, rights, and policies.
+
+### Accessibility Statement
+https://-58d0330b.zappy5.app/accessibility
+Information about WCAG compliance and accessibility features.
+
+---
+
+## How to Contact Us
+
+- (No contact details configured yet.)
+
+### Contact form
+- URL: https://-58d0330b.zappy5.app
+- Endpoint: https://-58d0330b.zappy5.app/api/email/contact-form
+- Method: POST
+- Content-Type: application/json
+- Fields:
+  - `first_name` (text, required)
+  - `last_name` (text, required)
+  - `phone` (tel, required)
+  - `email` (email, required)
+  - `message` (textarea)
+  - `privacy_consent` (checkbox, required)
+
+---
+
+# Business Context (for LLM understanding)
+
+## About חוסם הפרסומות של שילה - פשוט לגלוש נקי!
+אני רוצה ליצור אתר שהוא חוסם פרסומות לאתר קוראים "חוסם הפרסומות של שילה - פשוט לגלוש נקי" אני רק רוצה בקשה אחת שלא יראו שאתה יצרת את זה בנוסף אני רוצה שיהיה כתוב שהאתר הוא בחינם ושכדי לקבל חסימת פרסומות צריך למלאות את הפרטים הבאים שם: שם:
+ משפחה:
+ מספר טלפון: 
+מייל:
+ אני רוצה שהאתר יזהה מיילים לא אמיתים ושכל הפרטים האלה ישלחו למייל הזה: yoss.the.boss770@gmail.com
+בסדר אני רוצה שהאתר יעבוד במלואו ושיראה כמה שיותר אמין
+
+## Target Audience
+- גולשי אינטרנט המעוניינים בגלישה נקייה ללא פרסומות
+- גולשים נקיים מפרסומות
+- מי שרוצה לגלוש נקי באינטרנט
+
+## Industry
+Ad Blocking / Browser Tools
+
+---
+
+# Machine-readable feeds
+
+- Sitemap (XML): https://-58d0330b.zappy5.app/sitemap.xml
+- Robots: https://-58d0330b.zappy5.app/robots.txt
+- Flattened page text (for LLMs): https://-58d0330b.zappy5.app/llms-full.txt
